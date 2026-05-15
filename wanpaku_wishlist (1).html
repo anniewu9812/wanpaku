@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>わんぱく輕裝 · 許願帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --ink-soft: #4a3c28;
+    --ink-faint: #8a7a60;
+    --paper: #faf6ef;
+    --paper-warm: #f3ece0;
+    --paper-card: #fffdf8;
+    --red: #c0392b;
+    --red-soft: #e8c4b8;
+    --gold: #b8922a;
+    --gold-soft: #f0dfa8;
+    --teal: #2a7a6e;
+    --teal-soft: #b8dcd8;
+    --border: rgba(90,70,40,0.15);
+    --border-strong: rgba(90,70,40,0.30);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Paper texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(90,70,40,0.04) 39px, rgba(90,70,40,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(90,70,40,0.03) 39px, rgba(90,70,40,0.03) 40px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Seigaiha (wave) pattern header */
+  .hero {
+    position: relative;
+    background: var(--ink);
+    overflow: hidden;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(ellipse 60px 40px at 30px 40px, transparent 58px, rgba(184,146,42,0.3) 59px, rgba(184,146,42,0.3) 61px, transparent 62px),
+      radial-gradient(ellipse 60px 40px at 90px 40px, transparent 58px, rgba(184,146,42,0.3) 59px, rgba(184,146,42,0.3) 61px, transparent 62px),
+      radial-gradient(ellipse 60px 40px at 60px 20px, transparent 58px, rgba(184,146,42,0.3) 59px, rgba(184,146,42,0.3) 61px, transparent 62px);
+    background-size: 120px 80px;
+    opacity: 0.4;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    border: 1px solid rgba(184,146,42,0.5);
+    padding: 4px 16px;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 300;
+    color: #faf6ef;
+    letter-spacing: 0.15em;
+    line-height: 1.3;
+  }
+
+  .hero h1 span {
+    display: block;
+    font-size: 0.45em;
+    color: var(--gold-soft);
+    letter-spacing: 0.3em;
+    margin-top: 0.4rem;
+    font-weight: 300;
+  }
+
+  .hero-meta {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    text-align: center;
+  }
+
+  .hero-stat-num {
+    display: block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .hero-stat-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(250,246,239,0.6);
+    margin-top: 4px;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 2rem;
+    margin: 2rem 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider-text {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  /* Main layout */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    padding: 5px 14px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 0;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { background: var(--paper-warm); }
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--gold-soft);
+    border-color: var(--ink);
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  /* Character Card */
+  .char-card {
+    background: var(--paper-card);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .char-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--red);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.25s ease;
+  }
+
+  .char-card:hover { background: #fffcf2; }
+  .char-card:hover::before { transform: scaleY(1); }
+  .char-card.made { border-top: 2px solid var(--teal); }
+  .char-card.made::after {
+    content: '已製作';
+    position: absolute;
+    top: 12px; right: 12px;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    border: 1px solid var(--teal-soft);
+    padding: 2px 8px;
+    background: rgba(42,122,110,0.06);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .char-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+  }
+
+  .wish-count {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 500;
+  }
+
+  .wish-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    display: inline-block;
+  }
+
+  .card-wishers {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .wisher-tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--paper-warm);
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+    letter-spacing: 0.03em;
+  }
+
+  .card-notes {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border);
+    font-size: 11px;
+    color: var(--ink-faint);
+    line-height: 1.6;
+  }
+
+  .card-notes strong {
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* Made card photo placeholder */
+  .photo-area {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, var(--paper-warm) 0%, var(--teal-soft) 100%);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--teal);
+    border: 1px solid var(--border);
+    font-family: 'Noto Serif JP', serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+  }
+
+  .photo-icon {
+    font-size: 28px;
+  }
+
+  /* Sizes strip */
+  .sizes-strip {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .size-item {
+    font-size: 10px;
+    background: var(--gold-soft);
+    color: #7a5c10;
+    padding: 1px 7px;
+    border-radius: 0;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  /* Wish section */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .section-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+  }
+
+  .section-count {
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* Wish button */
+  .wish-cta {
+    margin: 3rem 0 2rem;
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wish-cta::before {
+    content: '許 願';
+    position: absolute;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.03);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    letter-spacing: 2rem;
+    white-space: nowrap;
+  }
+
+  .wish-cta p {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--gold-soft);
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+
+  .wish-cta h2 {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #faf6ef;
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .wish-btn {
+    display: inline-block;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    background: var(--gold-soft);
+    border: none;
+    padding: 12px 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .wish-btn:hover {
+    background: var(--gold);
+    color: #fff;
+  }
+
+  /* Inline form embed */
+  .form-embed {
+    display: none;
+    margin-top: 1.5rem;
+    position: relative;
+  }
+
+  .form-embed.visible { display: block; }
+
+  .form-embed iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid var(--border);
+  }
+
+  .close-form {
+    position: absolute;
+    top: -12px; right: -12px;
+    background: var(--red);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    width: 0%;
+    transition: width 1s ease;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+
+  /* Announcement banner */
+  .banner {
+    background: var(--gold-soft);
+    border: 1px solid rgba(184,146,42,0.3);
+    padding: 12px 20px;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .banner-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .banner-text {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  .banner-text strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--ink);
+    padding: 2rem;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(250,246,239,0.4);
+    letter-spacing: 0.15em;
+  }
+
+  /* Modal overlay for card detail */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,0.7);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .modal-overlay.visible {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--paper-card);
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-strong);
+    position: relative;
+  }
+
+  .modal-header {
+    background: var(--ink);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #faf6ef;
+    letter-spacing: 0.1em;
+  }
+
+  .modal-close {
+    background: none;
+    border: 1px solid rgba(250,246,239,0.3);
+    color: rgba(250,246,239,0.7);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .modal-section {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .modal-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .modal-section-title {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+
+  .wisher-row {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .wisher-row:last-child { border-bottom: none; }
+
+  .wisher-name {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .wisher-contact {
+    font-size: 11px;
+    color: var(--teal);
+    margin-top: 2px;
+  }
+
+  .wisher-note {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .wisher-size {
+    font-size: 10px;
+    color: #7a5c10;
+    margin-top: 3px;
+    font-family: monospace;
+    background: var(--gold-soft);
+    padding: 2px 6px;
+    display: inline-block;
+  }
+
+  .wip-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .wip-row:last-child { border-bottom: none; }
+  .wip-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+  .wip-chars {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+  }
+  .wip-empty { color: var(--ink-faint); font-style: italic; font-family: 'Noto Sans TC', sans-serif; }
+    .hero { padding: 2rem 1.25rem 2rem; }
+    .filter-bar { gap: 6px; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-meta { gap: 1.5rem; }
+    .char-name { font-size: 0.95rem; }
+    .char-card { padding: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">わんぱく娃娃 · 刀劍亂舞輕裝</div>
+    <h1>許願帳
+      <span>WISHLIST · COMMISSION TRACKER</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <span class="hero-stat-num" id="total-wishes">11</span>
+        <span class="hero-stat-label">總許願數</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" id="total-chars">0</span>
+        <span class="hero-stat-label">許願角色</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num" id="made-count">0</span>
+        <span class="hero-stat-label">已製作</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="banner">
+    <div class="banner-icon">🪡</div>
+    <div class="banner-text">
+      <strong>關於委託開放</strong><br>
+      目前為意向調查階段，尚未正式開啟委託。有意願的朋友可先填寫下方許願表單，開委託時將優先聯絡！尺寸測量請依わんぱく官方量身圖填寫 A~F 各欄位。
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-text">角色許願列表</span></div>
+
+  <div class="filter-bar">
+    <span class="filter-label">篩選</span>
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="wishes">許願中</button>
+    <button class="filter-btn" data-filter="made">已製作</button>
+  </div>
+
+  <div class="grid" id="card-grid">
+    <!-- Cards injected by JS -->
+  </div>
+
+  <div class="wish-cta">
+    <p>— 沒有看到自家刀刀？—</p>
+    <h2>許下你的心願</h2>
+    <button class="wish-btn" id="open-form-btn">填寫許願表單 ↗</button>
+    <div class="form-embed" id="form-embed">
+      <button class="close-form" id="close-form-btn">✕</button>
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSd6v8l7i_it05sNDAGqmW7WJ7sRn-UJh2dttXOurGOHAU9IqQ/viewform?embedded=true"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="わんぱく輕裝意向調查">
+        載入中⋯
+      </iframe>
+    </div>
+  </div>
+
+  <div class="divider"><span class="divider-text">製作進度</span></div>
+
+  <div style="margin-bottom: 1rem;">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;border:1px solid var(--border);background:var(--paper-card);">
+    <div style="background:var(--ink);padding:10px 16px;">
+      <span style="font-family:'Noto Serif JP',serif;font-size:12px;letter-spacing:0.2em;color:var(--gold-soft);">製作進度追蹤</span>
+    </div>
+    <div style="padding:0 0 4px;">
+      <div class="wip-row" style="border-left:3px solid var(--gold);">
+        <span class="wip-label" style="color:var(--gold);">↬ 紋樣繪製中</span>
+        <span class="wip-chars">鶴丸国永</span>
+      </div>
+      <div class="wip-row" style="border-left:3px solid var(--red);">
+        <span class="wip-label" style="color:var(--red);">↬ 送印中</span>
+        <span class="wip-chars wip-empty">——</span>
+      </div>
+      <div class="wip-row" style="border-left:3px solid var(--teal);">
+        <span class="wip-label" style="color:var(--teal);">↬ 製作中</span>
+        <span class="wip-chars wip-empty">——</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title"></span>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<footer>
+  © わんぱく輕裝委託企劃 · 資料來源：意向調查表單回覆 · 僅供參考用途
+</footer>
+
+<script>
+const wishData = [
+  // ── 已製作 ──
+  { id: 'suishinshi', name: '水心子正秀', wishes: [], made: true, photo: null },
+  { id: 'buzen', name: '豊前江', wishes: [], made: true, photo: null },
+  { id: 'izumi', name: '和泉守兼定', wishes: [], made: true, photo: null },
+  // ── 許願中 ──
+  { id: 'yamanbagiri_kuni', name: '山姥切国広', wishes: [{size:null},{size:null}], made: false, photo: null, wip: null },
+  { id: 'yamanbagiri_naga', name: '山姥切長義', wishes: [{size:null},{size:null}], made: false, photo: null, wip: null },
+  { id: 'fanjin', name: '泛塵', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'yamatonokami', name: '大和守安定', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'tsurumaru', name: '鶴丸国永', wishes: [{size:'未脫'},{size:null}], made: false, photo: null, wip: '紋樣繪製中' },
+  { id: 'hasebe', name: 'へし切長谷部', wishes: [{size:'未脫'},{size:'未脫'}], made: false, photo: null, wip: null },
+  { id: 'imanotsurugi', name: '今剣', wishes: [{size:'未脫'}], made: false, photo: null, wip: null },
+  { id: 'hime', name: '姫鶴一文字', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'juzumaru', name: '数珠丸恒次', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'kogarasumaru', name: '小烏丸', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'shinano', name: '信濃藤四郎', wishes: [{size:'未脫'}], made: false, photo: null, wip: null },
+  { id: 'kogitsune', name: '小狐丸', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'hizen', name: '肥前忠広', wishes: [{size:'未脫'}], made: false, photo: null, wip: null },
+  { id: 'hachisuka', name: '蜂須賀虎徹', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'nagasone', name: '長曽祢虎徹', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'horikawa', name: '堀川国広', wishes: [{size:null}], made: false, photo: null, wip: null },
+  { id: 'matsui', name: '松井江', wishes: [{size:null}], made: false, photo: null, wip: null }
+];
+
+// ---- Render ----
+const grid = document.getElementById('card-grid');
+let currentFilter = 'all';
+
+function parseSizeStr(str) {
+  if (!str) return null;
+  const parts = str.split(/[,、\s]+/).filter(p => /[A-F]:[\d.]+/.test(p));
+  if (parts.length === 0) return str;
+  return parts;
+}
+
+function renderCards(filter) {
+  grid.innerHTML = '';
+  let displayed = 0;
+
+  wishData.forEach(char => {
+    const hasSizes = char.wishes.some(w => w.size);
+    if (filter === 'wishes' && char.made) return;
+    if (filter === 'made' && !char.made) return;
+    if (filter === 'sized' && !hasSizes) return;
+
+    displayed++;
+    const card = document.createElement('div');
+    card.className = 'char-card' + (char.made ? ' made' : '');
+    card.dataset.id = char.id;
+
+    const wishCount = char.wishes.length;
+
+    let photoHtml = '';
+    if (char.made) {
+      if (char.photo) {
+        photoHtml = `<div class="photo-area"><img src="${char.photo}" alt="${char.name}"></div>`;
+      } else {
+        photoHtml = `<div class="photo-area"><div class="photo-placeholder"><span class="photo-icon">📷</span><span>照片更新中</span></div></div>`;
+      }
+    }
+
+    const sizeLabel = hasSizes ? `<span class="size-item" style="background:var(--teal-soft);color:var(--teal);">尺寸 ✓ · ${char.wishes.find(w => w.size)?.size}</span>` : '';
+    const sizesHtml = hasSizes ? `<div class="sizes-strip">${sizeLabel}</div>` : '';
+
+    const wipHtml = char.wip
+      ? `<div style="margin-top:6px;font-size:10px;color:var(--gold);letter-spacing:0.08em;">↬ ${char.wip}</div>`
+      : '';
+
+    card.innerHTML = `
+      ${photoHtml}
+      <div class="card-top">
+        <span class="char-name">${char.name}</span>
+        ${!char.made ? `<span class="wish-count"><span class="wish-dot"></span>${wishCount} 人許願</span>` : ''}
+      </div>
+      ${sizesHtml}
+      ${wipHtml}
+    `;
+
+    card.addEventListener('click', () => openModal(char));
+    grid.appendChild(card);
+  });
+
+  if (displayed === 0) {
+    grid.innerHTML = `<div style="padding:3rem;text-align:center;color:var(--ink-faint);font-size:13px;letter-spacing:0.1em;grid-column:1/-1;">目前尚無符合條件的角色</div>`;
+  }
+}
+
+function openModal(char) {
+  document.getElementById('modal-title').textContent = char.name;
+  const body = document.getElementById('modal-body');
+
+  let photoHtml = '';
+  if (char.made) {
+    if (char.photo) {
+      photoHtml = `<div class="modal-section"><img src="${char.photo}" alt="${char.name}" style="width:100%;height:200px;object-fit:cover;"></div>`;
+    } else {
+      photoHtml = `<div class="modal-section"><div class="photo-area" style="height:120px;"><div class="photo-placeholder"><span class="photo-icon">📷</span><span>完成照片更新中</span></div></div></div>`;
+    }
+  }
+
+  const wishersHtml = char.wishes.map((w, i) => `
+    <div class="wisher-row">
+      <div class="wisher-name">許願者 ${i+1} <span style="font-size:10px;color:var(--ink-faint);font-weight:400;">${w.time}</span></div>
+      ${w.contact ? `<div class="wisher-contact">${w.contact}</div>` : ''}
+      ${w.size ? `<div class="wisher-size">量身尺寸：${w.size}</div>` : ''}
+      ${w.note ? `<div class="wisher-note">「${w.note}」</div>` : ''}
+    </div>
+  `).join('');
+
+  const statusHtml = char.made
+    ? `<div style="background:rgba(42,122,110,0.08);border:1px solid var(--teal-soft);padding:10px 14px;font-size:12px;color:var(--teal);letter-spacing:0.1em;margin-bottom:1rem;">✓ 此角色已製作完成</div>`
+    : `<div style="background:var(--paper-warm);border:1px solid var(--border);padding:10px 14px;font-size:12px;color:var(--ink-faint);letter-spacing:0.05em;margin-bottom:1rem;">許願中 · 共 ${char.wishes.length} 人</div>`;
+
+  body.innerHTML = `
+    ${photoHtml}
+    ${statusHtml}
+    <div class="modal-section">
+      <div class="modal-section-title">— 許願名單 —</div>
+      ${wishersHtml}
+    </div>
+  `;
+
+  document.getElementById('modal-overlay').classList.add('visible');
+}
+
+function updateStats() {
+  const wishChars = wishData.filter(c => !c.made);
+  const totalWishes = wishChars.reduce((s, c) => s + c.wishes.length, 0);
+  const totalChars = wishChars.length;
+  const madeCount = wishData.filter(c => c.made).length;
+  const total = wishData.length;
+
+  document.getElementById('total-wishes').textContent = totalWishes;
+  document.getElementById('total-chars').textContent = totalChars;
+  document.getElementById('made-count').textContent = madeCount;
+
+  const pct = total > 0 ? (madeCount / total * 100) : 0;
+  setTimeout(() => {
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }, 300);
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderCards(currentFilter);
+  });
+});
+
+// Modal close
+document.getElementById('modal-close').addEventListener('click', () => {
+  document.getElementById('modal-overlay').classList.remove('visible');
+});
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('visible');
+  }
+});
+
+// Form toggle
+document.getElementById('open-form-btn').addEventListener('click', () => {
+  const embed = document.getElementById('form-embed');
+  embed.classList.toggle('visible');
+  if (embed.classList.contains('visible')) {
+    embed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+document.getElementById('close-form-btn').addEventListener('click', () => {
+  document.getElementById('form-embed').classList.remove('visible');
+});
+
+// Init
+renderCards('all');
+updateStats();
+</script>
+</body>
+</html>
