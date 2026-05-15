@@ -685,6 +685,193 @@
     .char-name { font-size: 0.95rem; }
     .char-card { padding: 0.9rem; }
   }
+
+  /* ── 手機版響應式（≤480px） ── */
+  @media (max-width: 480px) {
+    /* Hero */
+    .hero {
+      padding: 1.5rem 1rem 1.5rem;
+    }
+    .hero h1 {
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+    }
+    .hero-badge {
+      font-size: 10px;
+      padding: 3px 10px;
+    }
+    .hero-meta {
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .hero-stat-num {
+      font-size: 1.4rem;
+    }
+    .hero-stat-label {
+      font-size: 9px;
+    }
+
+    /* Main layout */
+    main {
+      padding: 0 0.75rem 3rem;
+    }
+
+    /* Filter bar – 橫向捲動，不換行 */
+    .filter-bar {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn {
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-size: 12px;
+      padding: 6px 14px;
+      min-height: 36px; /* 更好觸控目標 */
+    }
+
+    /* Grid：手機單欄顯示，方便閱讀 */
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* 卡片：取消 aspect-ratio，讓內容自然撐高 */
+    .char-card {
+      aspect-ratio: unset;
+      padding: 1rem;
+      min-height: 90px;
+    }
+
+    /* 卡片名稱 */
+    .char-name {
+      font-size: 1rem;
+    }
+
+    /* 許願人數標籤 */
+    .wish-count {
+      font-size: 11px;
+    }
+
+    /* Banner 公告 */
+    .banner {
+      padding: 10px 14px;
+      gap: 10px;
+    }
+    .banner-text {
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    /* Wish CTA 區塊 */
+    .wish-cta {
+      padding: 2rem 1rem;
+      margin: 2rem 0 1.5rem;
+    }
+    .wish-cta h2 {
+      font-size: 1.2rem;
+      letter-spacing: 0.12em;
+    }
+    .wish-btn {
+      font-size: 12px;
+      padding: 11px 24px;
+      letter-spacing: 0.15em;
+    }
+
+    /* 嵌入表單高度 */
+    .form-embed iframe {
+      height: 520px;
+    }
+
+    /* 關閉按鈕更大，易於點擊 */
+    .close-form {
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+      top: -14px;
+      right: -8px;
+    }
+
+    /* 分隔線文字 */
+    .divider-text {
+      font-size: 11px;
+    }
+
+    /* 製作進度追蹤表 */
+    .wip-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 10px 12px;
+    }
+    .wip-label {
+      min-width: unset;
+      font-size: 11px;
+    }
+    .wip-chars {
+      font-size: 13px;
+      padding-left: 4px;
+    }
+
+    /* Modal 全螢幕化 */
+    .modal-overlay {
+      padding: 0;
+      align-items: flex-end;
+    }
+    .modal {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+    }
+    .modal-header {
+      padding: 1rem 1.25rem;
+    }
+    .modal-title {
+      font-size: 1.05rem;
+    }
+    .modal-body {
+      padding: 1.25rem;
+    }
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 1.5rem 1rem;
+      font-size: 10px;
+    }
+  }
+
+  /* ── 中等手機（481px–767px） ── */
+  @media (min-width: 481px) and (max-width: 767px) {
+    main {
+      padding: 0 1rem 3.5rem;
+    }
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .char-card {
+      padding: 1rem;
+    }
+    .filter-btn {
+      min-height: 36px;
+    }
+    .modal-overlay {
+      padding: 1rem;
+      align-items: flex-end;
+    }
+    .modal {
+      max-height: 88vh;
+    }
+  }
 </style>
 </head>
 <body>
