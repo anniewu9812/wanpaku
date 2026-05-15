@@ -210,10 +210,10 @@
     transition: background 0.2s;
     position: relative;
     overflow: hidden;
-    aspect-ratio: 1 / 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    min-height: 90px;
   }
 
   .char-card::before {
@@ -310,7 +310,7 @@
   /* Made card photo placeholder */
   .photo-area {
     width: 100%;
-    height: 140px;
+    height: 100px;
     background: linear-gradient(135deg, var(--paper-warm) 0%, var(--teal-soft) 100%);
     margin-bottom: 0.75rem;
     display: flex;
@@ -987,8 +987,8 @@
 <script>
 const wishData = [
   // ── 已製作 ──
-  { id: 'suishinshi', name: '水心子正秀', wishes: [], made: true, photo: null },
-  { id: 'buzen', name: '豊前江', wishes: [], made: true, photo: null },
+  { id: 'suishinshi', name: '水心子正秀', wishes: [], made: true, photo: 'https://raw.githubusercontent.com/anniewu9812-ux/wanpaku/main/水心子正秀.jpg' },
+  { id: 'buzen', name: '豊前江', wishes: [], made: true, photo: 'https://raw.githubusercontent.com/anniewu9812-ux/wanpaku/main/豊前江.jpg' },
   { id: 'izumi', name: '和泉守兼定', wishes: [], made: true, photo: null },
   // ── 許願中 ──
   { id: 'yamanbagiri_kuni', name: '山姥切国広', wishes: [{size:null},{size:null}], made: false, photo: null, wip: null },
@@ -1043,7 +1043,7 @@ function renderCards(filter) {
       if (char.photo) {
         photoHtml = `<div class="photo-area"><img src="${char.photo}" alt="${char.name}"></div>`;
       } else {
-        photoHtml = `<div class="photo-area"><div class="photo-placeholder"><span class="photo-icon">📷</span><span>照片更新中</span></div></div>`;
+        photoHtml = `<div style="font-size:10px;color:var(--ink-faint);letter-spacing:0.1em;margin-bottom:0.5rem;">📷 照片更新中</div>`;
       }
     }
 
