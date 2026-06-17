@@ -888,10 +888,6 @@
     </h1>
     <div class="hero-meta">
       <div class="hero-stat">
-        <span class="hero-stat-num" id="total-wishes">11</span>
-        <span class="hero-stat-label">總許願數</span>
-      </div>
-      <div class="hero-stat">
         <span class="hero-stat-num" id="total-chars">0</span>
         <span class="hero-stat-label">許願角色</span>
       </div>
@@ -1116,12 +1112,10 @@ function openModal(char) {
 
 function updateStats() {
   const wishChars = wishData.filter(c => !c.made);
-  const totalWishes = wishChars.reduce((s, c) => s + c.count, 0);
   const totalChars = wishChars.length;
   const madeCount = wishData.filter(c => c.made).length;
   const total = wishData.length;
 
-  document.getElementById('total-wishes').textContent = totalWishes;
   document.getElementById('total-chars').textContent = totalChars;
   document.getElementById('made-count').textContent = madeCount;
 
